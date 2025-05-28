@@ -5,6 +5,7 @@ import { Nunito } from "next/font/google";
 import Header from "@/components/Header";
 
 import "./globals.css";
+import ContextProvider from "@/providers/ContextProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -34,12 +35,14 @@ export default function RootLayout({
         />
       </head>
       <ClerkProvider>
-        <body className={`${nunito.className} antialiased`}>
-          <Header />
-          <main className="py-8 mx-[15rem] xl:mx-[25rem] h-full">
-            {children}
-          </main>
-        </body>
+        <ContextProvider>
+          <body className={`${nunito.className} antialiased`}>
+            <Header />
+            <main className="py-8 mx-[15rem] xl:mx-[25rem] h-full">
+              {children}
+            </main>
+          </body>
+        </ContextProvider>
       </ClerkProvider>
     </html>
   );

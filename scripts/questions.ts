@@ -1,4 +1,4 @@
-const questions = require("../data/csQuestions.js");
+const questions = require("../data/biology/anatomyPhysiologyQuestions.js");
 
 let prismaQuestions: any;
 
@@ -13,7 +13,7 @@ async function seedQuestions() {
     const createdQuestion = await prismaQuestions.question.create({
       data: {
         text: question.text,
-        quizId: "68372c31478c10b54e96c80b",
+        quizId: "683b5aa5256efbc09e6fbea4",
         options: {
           create: question.options,
         },

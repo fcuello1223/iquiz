@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -17,7 +17,7 @@ function HomeCard({ category }: Props) {
       className="cursor-pointer border-2 rounded-xl p-1 shadow-[0_.3rem_0_0_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-transform duration-300 ease-in-out"
       onClick={() => router.push(`/categories/${category.id}`)}
     >
-      <div className="rounded-xl h-[9rem] py-1">
+      <div className="flex items-center justify-center w-full h-auto px-4">
         <Image
           src={
             category.image
@@ -25,12 +25,12 @@ function HomeCard({ category }: Props) {
               : `/categories/image--${category.name
                   .toLowerCase()
                   .split(" ")
-                  .join("-")}.svg`
+                  .join("-")}.png`
           }
-          width={300}
-          height={200}
+          width={220}
+          height={150}
           alt={category.name}
-          className="h-full rounded-xl"
+          className="object-contain"
         />
       </div>
       <div className="py-2 px-6 flex flex-col gap-4">

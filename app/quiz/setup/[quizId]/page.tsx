@@ -1,5 +1,8 @@
 "use client";
 import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+import axios from "axios";
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -11,9 +14,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+
 import { play } from "@/utils/icons";
+
 import { useGlobalContext } from "@/context/globalContext";
-import { useRouter } from "next/navigation";
 
 function page() {
   const router = useRouter();
@@ -40,12 +44,33 @@ function page() {
     setQuizSetup((prev: {}) => ({ ...prev, difficulty: difficulty }));
 
     console.log("Difficulty: ", difficulty);
-    
   };
 
-  const startQuiz = () => {
-    
-  }
+  const startQuiz = async () => {
+    const selectedQuestions = selectedQuiz?.questions
+      .slice(0, quizSetup?.questionCount)
+      .filter((q: { difficulty: string }) => {
+        return (
+          quizSetup?.difficulty ||
+          q.difficulty?.toLowerCase() ===
+            selectedQuiz?.difficulty?.toLowerCase()
+        );
+      });
+
+    if (selectedQuestions.length > 0) {
+      //Update the database for quiz attempt start
+      try {
+        await axios.post("/api/user/quiz/start", {
+          categoryId: selectedQuiz?.categoryId,
+          quizId: selectedQuiz?.id,
+        });
+      } catch (error) {
+        console.log("Error Starting Quiz: ", error);
+      }
+    } else {
+      toast.error("No Questions Found For The Selected Criteria!");
+    }
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -111,6 +136,7 @@ function page() {
           <Button
             variant={"blue"}
             className="px-10 py-6 font-bold text-white text-xl rounded-xl cursor-pointer"
+            onClick={startQuiz}
           >
             <span className="flex items-center gap-2">{play} Start</span>
           </Button>

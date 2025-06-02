@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Nunito } from "next/font/google";
+import { Toaster } from 'react-hot-toast';
 
+import ContextProvider from "@/providers/ContextProvider";
 import Header from "@/components/Header";
 
 import "./globals.css";
-import ContextProvider from "@/providers/ContextProvider";
+
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -37,6 +39,7 @@ export default function RootLayout({
       <ClerkProvider>
         <ContextProvider>
           <body className={`${nunito.className} antialiased`}>
+            <Toaster position="top-center" />
             <Header />
             <main className="py-8 mx-[15rem] xl:mx-[25rem] h-full">
               {children}

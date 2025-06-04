@@ -67,6 +67,8 @@ function page() {
       } catch (error) {
         console.log("Error Starting Quiz: ", error);
       }
+
+      router.push('/quiz');
     } else {
       toast.error("No Questions Found For The Selected Criteria!");
     }
@@ -85,7 +87,7 @@ function page() {
               <Input
                 type="number"
                 id="questionCount"
-                min={10}
+                min={3}
                 max={selectedQuiz?.questions.length}
                 value={quizSetup?.questionCount}
                 onChange={handleQuestionChange}

@@ -7,6 +7,9 @@ import { IOption, IQuestion, IResponse } from "@/types/types";
 import { Button } from "@/components/ui/button";
 import { flag, next } from "@/utils/icons";
 import { getPriority } from "os";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { Noto_Kufi_Arabic } from "next/font/google";
 
 function page() {
   const { selectedQuiz, quizSetup, setQuizSetup, setQuizResponses } =
@@ -96,8 +99,39 @@ function page() {
   };
 
   const handleNextQuestion = () => {
+    if (currentIndex < shuffledQuestions.length - 1) {
+      setCurrentIndex((prev) => prev + 1);
 
-  }
+      //Reset the Active Question
+      setActiveQuestion(null);
+    } else {
+      router.push("/quiz/results");
+    }
+  };
+
+  const handleFinishQuiz = async () => {
+    setQuizResponses(responses);
+
+    const score = responses.filter((response) => response.isCorrect).length;
+
+    try {
+      const response = await axios.post("/api/user/quiz/finish", {
+        categoryId: selectedQuiz.categoryId,
+        quizId: selectedQuiz.id,
+        score: score,
+        responses: responses,
+      });
+
+      console.log('Quiz Finished: ', response.data);
+      
+    } catch (error) {
+      console.log("Error Finishing Quiz: ", error);
+    }
+
+    setQuizSetup({ questionCount: 1, category: null, difficulty: null });
+
+    router.push('/results');
+  };
 
   return (
     <div className="flex flex-col relative">
@@ -140,6 +174,25 @@ function page() {
           <Button
             className="px-10 py-6 font-bold text-white text-xl rounded-xl cursor-pointer"
             variant={"green"}
+            onClick={() => {
+              if (currentIndex < shuffledQuestions.length - 1) {
+                if (activeQuestion?.id) {
+                  handleNextQuestion();
+                } else {
+                  const sound = new Audio("/sounds/error.mp3");
+                  sound.play();
+                  toast.error("Please Select an Option to Continue!");
+                }
+              } else {
+                if (activeQuestion?.id) {
+                  handleFinishQuiz();
+                } else {
+                  const sound = new Audio("/sounds/error.mp3");
+                  sound.play();
+                  toast.error("Please Select an Option to Continue!");
+                }
+              }
+            }}
           >
             {currentIndex < shuffledQuestions.length - 1 ? (
               <span className="flex items-center gap-2">{next} Next</span>

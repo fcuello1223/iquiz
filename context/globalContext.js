@@ -20,6 +20,7 @@ export const GlobalContextProvider = ({ children }) => {
 
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [quizResponses, setQuizResponses] = useState([]);
+  const [filteredQuestions, setFilteredQuestions] = useState([]);
 
   useEffect(() => {
     if (!isLoaded || !user?.emailAddresses[0]?.emailAddress) {
@@ -50,6 +51,8 @@ export const GlobalContextProvider = ({ children }) => {
         setSelectedQuiz,
         quizResponses,
         setQuizResponses,
+        filteredQuestions,
+        setFilteredQuestions
       }}
     >
       {children}

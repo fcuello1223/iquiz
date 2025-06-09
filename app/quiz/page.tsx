@@ -6,14 +6,17 @@ import { useRouter } from "next/navigation";
 import { IOption, IQuestion, IResponse } from "@/types/types";
 import { Button } from "@/components/ui/button";
 import { flag, next } from "@/utils/icons";
-import { getPriority } from "os";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { Noto_Kufi_Arabic } from "next/font/google";
 
 function page() {
-  const { selectedQuiz, quizSetup, setQuizSetup, setQuizResponses } =
-    useGlobalContext();
+  const {
+    selectedQuiz,
+    quizSetup,
+    setQuizSetup,
+    setQuizResponses,
+    filteredQuestions,
+  } = useGlobalContext();
 
   const router = useRouter();
 
@@ -43,17 +46,9 @@ function page() {
 
   //Shuffle Questions when Quiz is Started
   useEffect(() => {
-    const filteredQuestions = selectedQuiz.questions
-      .filter((q: { difficulty: string }) => {
-        return (
-          !quizSetup?.difficulty ||
-          quizSetup?.difficulty === "unspecified" ||
-          q.difficulty === quizSetup?.difficulty
-        );
-      })
-      .slice(0, quizSetup?.questionCount);
-
-    setShuffledQuestions(shuffleArray([...filteredQuestions]));
+    const allQuestions = filteredQuestions.slice(0, quizSetup?.questionCount);
+    
+    setShuffledQuestions(shuffleArray([...allQuestions]));
   }, [selectedQuiz, quizSetup]);
 
   //Shuffle Opti.ons when Active Question Changes
@@ -122,15 +117,14 @@ function page() {
         responses: responses,
       });
 
-      console.log('Quiz Finished: ', response.data);
-      
+      console.log("Quiz Finished: ", response.data);
     } catch (error) {
       console.log("Error Finishing Quiz: ", error);
     }
 
     setQuizSetup({ questionCount: 1, category: null, difficulty: null });
 
-    router.push('/results');
+    router.push("/results");
   };
 
   return (

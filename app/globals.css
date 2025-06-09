@@ -41,6 +41,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
 }
 
 :root {
@@ -76,6 +77,8 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
+  --green-400: #4ade82;
+  --blue-400: #60a5fc;
 }
 
 .dark {
@@ -110,6 +113,7 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
+
 }
 
 @layer base {
@@ -119,12 +123,28 @@
   body {
     @apply bg-background text-foreground;
   }
+  :root {
+        --green-400: #4ade82;
+  --blue-400: #60a5fc;
+  }
+
 }
 
-/* html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-} */
+/* HTML: <div class="loader"></div> */
+/* HTML: <div class="loader"></div> */
+.loader {
+  font-weight: bold;
+  font-family: sans-serif;
+  font-size: 5rem;
+  animation: l1 1s linear infinite alternate;
+}
+
+.loader:before {
+  content:"Loading..."
+}
+
+@keyframes l1 {
+  to {
+    opacity: 0
+  }
+}

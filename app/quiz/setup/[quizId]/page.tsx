@@ -22,13 +22,28 @@ import { useGlobalContext } from "@/context/globalContext";
 function page() {
   const router = useRouter();
 
-  const { quizSetup, setQuizSetup, selectedQuiz } = useGlobalContext();
+  const { quizSetup, setQuizSetup, selectedQuiz, setFilteredQuestions } =
+    useGlobalContext();
 
   useEffect(() => {
     if (!selectedQuiz) {
       router.push("/");
     }
   }, [selectedQuiz, router]);
+
+  useEffect(() => {
+    const filteredQuestions = selectedQuiz?.questions.filter(
+      (q: { difficulty: string }) => {
+        return (
+          !quizSetup?.difficulty ||
+          quizSetup?.difficulty === "unspecified" ||
+          q?.difficulty.toLowerCase() === quizSetup?.difficulty.toLowerCase()
+        );
+      }
+    );
+
+    setFilteredQuestions(filteredQuestions);
+  }, [quizSetup]);
 
   const handleQuestionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseInt(event.target.value, 10);
@@ -68,7 +83,7 @@ function page() {
         console.log("Error Starting Quiz: ", error);
       }
 
-      router.push('/quiz');
+      router.push("/quiz");
     } else {
       toast.error("No Questions Found For The Selected Criteria!");
     }
